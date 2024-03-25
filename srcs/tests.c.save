@@ -1,0 +1,145 @@
+#include "launcher.h"
+
+void	try_smth()
+{
+	// struct	winsize w;
+	// ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
+	// printf("width: %d, height: %d, x: %d, y: %d\n", w.ws_col, w.ws_row, w.ws_xpixel, w.ws_ypixel);
+	// int	test_fd = open("test.txt", O_CREAT | O_TRUNC | O_WRONLY, 0644);
+	// dup2(test_fd, 1);
+	// pipe(pfd);
+	// dup2(pfd[1], 1);
+	// // close(test_fd);
+	// printf("\033[6n");
+	// char str[4];
+	// ft_bzero(str, 4);
+	// read(pfd[0], str, 4);
+	// printf("str: %s\n", str);
+
+	// pipe(pfd);
+
+	// r_pid = fork();
+	// if (r_pid == 0)
+	// {
+	// 	dup2(pfd[0], 0);
+	// 	dup2(pfd[1], 1);
+	// 	close(pfd[0]);
+	// 	close(pfd[1]);
+	// 	printf("\033[6n");
+	// 	exit(0);
+	// }
+
+	// wait(NULL);
+
+	// char str[50];
+	// ft_bzero(str, 50);
+	// read(pfd[0], str, 50);
+	// printf("str: %s\n", str);
+
+	// printf("child terminated\n");
+
+	// clear();
+
+	// for (int i = 0; i < 2000; i++)
+	// {
+	// 	gotoxy(1, 1);
+	// 	printf("\runités: %d", i % 10);
+	// 	gotoxy(2, 1);
+	// 	printf("\rdizaines: %d", i / 10);
+	// 	gotoxy(3, 1);
+	// 	printf("\rcentaines: %d", i / 100);
+	// 	gotoxy(4, 1);
+	// 	printf("\rmilliers: %d", i / 1000);
+	// 	usleep(10000);
+	// }
+
+	// // initscr();
+
+	// // for (int i = 0; i < 2000; i++)
+	// // {
+	// // 	move(0, 0);
+	// // 	printw("unités: %d\n", i % 10);
+	// // 	printw("dizaines: %d\n", i / 10);
+	// // 	printw("centaines: %d\n", i / 100);
+	// // 	printw("milliers: %d\n", i / 1000);
+	// // 	refresh();
+	// // 	napms(10);
+	// // }
+}
+
+void	un_test_rigolo()
+{
+	clear();
+
+	setvbuf(stdout, NULL, _IONBF, 0);
+	setvbuf(stderr, NULL, _IONBF, 0);
+
+	struct	winsize w;
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
+	printf("width: %d, height: %d, x: %d, y: %d\n", w.ws_col, w.ws_row, w.ws_xpixel, w.ws_ypixel);
+
+	char	*str = malloc(sizeof(char) * w.ws_col + 1);
+
+	for (int i = 0; i < w.ws_col; i++)
+		str[i] = 'a';
+	str[w.ws_col] = '\0';
+
+	// gotoxy(2, 0);
+	// printf("\r%s", str);
+
+	struct timeval	start;
+	struct timeval	end;
+	double	elapsed_array[10];
+	int		fps_array[10];
+
+	for (int i = 0; i < 10; i++)
+	{
+		elapsed_array[i] = 0.0f;
+		fps_array[i] = 0;
+	}
+
+	int		fps;
+	char	c;
+	char	*color_array[6];
+	color_array[0] = RED;
+	color_array[1] = GREEN;
+	color_array[2] = BLUE;
+	color_array[3] = ORANGE;
+	color_array[4] = YELLOW;
+	color_array[5] = PURPLE;
+	char	*color;
+
+	for (int test = 0; test < 10; test++)
+	{
+		fps = 0;
+		gettimeofday(&start, NULL);
+		double	elapsed_time = 0.0f;
+		while (elapsed_time < 1000)
+		{
+			// print a frame
+			for (int i = 2; i < w.ws_row; i++)
+			{
+				gotoxy(i, 0);
+				c = (fps % 26) + 97;
+				color = color_array[fps % 6];
+				for (int i = 0; i < w.ws_col; i++)
+					str[i] = c;
+				str[w.ws_col] = '\0';
+				printf("\r%s%s%s", color, str, NRM);
+				// for (int j = 0; j < w.ws_col; j++)
+				// {
+				// 	printf("a");
+				// }
+			}
+			gettimeofday(&end, NULL);
+			elapsed_time = (end.tv_sec - start.tv_sec) * 1000;
+			elapsed_time += (end.tv_usec - start.tv_usec) / 1000;
+			fps++;
+		}
+		elapsed_array[test] = elapsed_time;
+		fps_array[test] = fps;
+	}
+
+	for (int i = 0; i < 10; i++)
+		printf("\n%dfps in %.3fms.\n", fps_array[i], elapsed_array[i]);
+}
